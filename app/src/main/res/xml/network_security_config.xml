@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!--信任一切证书的办法-->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <!--
+              "system",表示预装系统 CA 证书
+              "user",表示用户添加的 CA 证书
+              "overridePins",指定此来源的CA是否绕过证书固定。
+            -->
+            <certificates
+                overridePins="true"
+                src="system" />
+            <certificates
+                overridePins="true"
+                src="user" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

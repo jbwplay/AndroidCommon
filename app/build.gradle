@@ -1,0 +1,141 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    flavorDimensions "default"
+
+    defaultConfig {
+        applicationId "com.androidbase"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+
+        multiDexEnabled true
+
+        ndk {
+            abiFilters 'armeabi-v7a', 'x86'
+        }
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file(RELEASE_STORE_FILE)
+            storePassword RELEASE_STORE_PASSWORD
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
+        }
+
+        release {
+            storeFile file(RELEASE_STORE_FILE)
+            storePassword RELEASE_STORE_PASSWORD
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
+
+            v2SigningEnabled true
+        }
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+
+        //exclude '/lib/armeabi-v7a/<file_to_exclude>'
+        //exclude '/res/values-v21/<file_to_exclude>'
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        release {
+            // 1、是否进行混淆
+            minifyEnabled true
+            // 2、开启zipAlign可以让安装包中的资源按4字节对齐，这样可以减少应用在运行时的内存消耗
+            zipAlignEnabled true
+            // 3、移除无用的resource文件：当ProGuard把部分无用代码移除的时候，这些代码所引用的资
+            // 源也会被标记为无用资源，然后系统通过资源压缩功能将它们移除。需要注意的是目前资源压缩器
+            // 目前不会移除values/文件夹中定义的资源（例如字符串、尺寸、样式和颜色）
+            // 开启后，Android构建工具会通过ResourceUsageAnalyzer来检查哪些资源是无用的，当检查
+            // 到无用的资源时会把该资源替换成预定义的版本。主要是针对.png、.9.png、.xml提供了
+            // TINY_PNG、TINY_9PNG、TINY_XML这3个byte数组的预定义版本。资源压缩工具默认是采用安全
+            // 压缩模式来运行，可以通过开启严格压缩模式来达到更好的瘦身效果。
+            shrinkResources true
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    buildFeatures {
+        dataBinding true
+    }
+
+    // rename the apk with the version name
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            String productFlavor = variant.productFlavors[0].name
+            String fileName = "${productFlavor}-${variant.buildType.name}-${variant.versionName}-${variant.versionCode}.apk".toLowerCase()
+            outputFileName = new File(fileName)
+        }
+    }
+
+    productFlavors {
+        android {
+            applicationId "com.androidbase"
+            buildConfigField("int", "APP_ENV", "0")
+            manifestPlaceholders = [
+                    JPUSH_PKGNAME: applicationId,
+                    JPUSH_APPKEY : "d45d748f9e6e1d077f4cddc8",
+                    JPUSH_CHANNEL: "crm-office",
+                    MTA_APPKEY   : "AEL1U8N1JG8J",
+                    MTA_CHANNEL  : "andbase-office",
+                    APP_NAME     : "AndBase测试"
+            ]
+        }
+    }
+
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+    google()
+
+    /*// 子模块含有aar
+    repositories {
+        flatDir {
+            dirs 'libs', '../xxx/libs' //aar在xxx Module下
+        }
+    }*/
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation project(':androidbase')
+}

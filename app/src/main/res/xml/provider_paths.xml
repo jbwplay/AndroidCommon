@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!--paths
+        name：是一个文件别名,对外可见路径的一部分,隐藏真实文件目录。
+        path：是一个相对目录,相对于当前标签的根目录。path值为点符号（"."）时，该根目录下所有的文件夹都可以临时授权访问。-->
+
+    <external-path
+        name="ext_root"
+        path="/" /> <!--对应外部内存卡根目录：Environment.getExternalStorageDirectory()-->
+
+    <files-path
+        name="nameFilesDir"
+        path="/" /> <!--物理路径相当于Context.getFilesDir() -->
+     
+    <cache-path
+        name="nameCacheDir"
+        path="/" /> <!--//物理路径相当于Context.getCacheDir() -->
+     
+    <external-files-path
+        name="externalFilesDir"
+        path="/" /> <!--//物理路径相当于Context.getExternalFilesDir(String)-->
+     
+    <external-cache-path
+        name="externalCacheDir"
+        path="/" /> <!--//物理路径相当于Context.getExternalCacheDir() -->
+</paths>

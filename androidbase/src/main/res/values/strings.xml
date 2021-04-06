@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Androidbase</string>
+</resources>
+
+    <!-- 常用的XML转义字符：
+    空格： &#160;
+    换行： \n
+    "  ： &#34; 或 &quot;
+    '  ： &#39; 或 &apos;
+    &  ： &#38; 或 &amp;
+    lt(<) ： &#60; 或 &lt;
+    gt(>) ： &#62; 或 &gt;  -->
