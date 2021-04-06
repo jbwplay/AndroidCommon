@@ -39,6 +39,7 @@ public class OkLogInterceptor implements Interceptor {
         } catch (Exception e) {
             logDataBuilder.requestFailed();
             logDataBuilder.responseBody("<-- HTTP FAILED: " + e.getMessage());
+            // 数据库记录操作
             throw e;
         }
         long tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs);
@@ -46,7 +47,7 @@ public class OkLogInterceptor implements Interceptor {
 
         ResponseLogData<Response> responseLogData = logDataInterceptor.processResponse(logDataBuilder, response);
         if (logDataBuilder.getResponseBodySize() <= LOGMAXSIZE && logDataBuilder.getRequestContentLength() <= LOGMAXSIZE) {
-            Log.i("okhttp", logDataBuilder.toString());
+            // 数据库记录操作
         }
         return responseLogData.getResponse();
     }
