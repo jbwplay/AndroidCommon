@@ -181,6 +181,9 @@ public class LogDataBuilder {
     }
 
     List<HeaderDataBuilder> getRequestHeaders() {
+        if (requestHeaders == null) {
+            requestHeaders = new ArrayList<>();
+        }
         return requestHeaders;
     }
 
