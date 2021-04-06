@@ -29,3 +29,7 @@
 
 Android基础工具集全面封装
 
+
+
+implementation 'com.github.jbwplay:AndroidCommon:version'
+
