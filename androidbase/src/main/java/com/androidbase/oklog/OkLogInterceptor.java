@@ -19,8 +19,6 @@ import okhttp3.Response;
 
 public class OkLogInterceptor implements Interceptor {
 
-    private final static int LOGMAXSIZE = 20 * 1024; //20K MAX Size
-
     private final LogDataInterceptor logDataInterceptor;
 
     public OkLogInterceptor() {
@@ -46,8 +44,21 @@ public class OkLogInterceptor implements Interceptor {
         logDataBuilder.responseDurationMs(tookMs);
 
         ResponseLogData<Response> responseLogData = logDataInterceptor.processResponse(logDataBuilder, response);
-        if (logDataBuilder.getResponseBodySize() <= LOGMAXSIZE && logDataBuilder.getRequestContentLength() <= LOGMAXSIZE) {
-            // 数据库记录操作
+        // 数据库记录操作
+        // 进行日志打印
+        String logdata = logDataBuilder.toString();
+        if (logdata.length() > 4000) {
+            int chunkCount = logdata.length() / 4000;
+            for (int i = 0; i <= chunkCount; i++) {
+                int max = 4000 * (i + 1);
+                if (max >= logdata.length()) {
+                    Log.i("okhttp", logdata.substring(4000 * i));
+                } else {
+                    Log.i("okhttp", logdata.substring(4000 * i, max));
+                }
+            }
+        } else {
+            Log.i("okhttp", logdata);
         }
         return responseLogData.getResponse();
     }
