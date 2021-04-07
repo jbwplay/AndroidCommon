@@ -37,14 +37,20 @@ public class OkLogInterceptor implements Interceptor {
         } catch (Exception e) {
             logDataBuilder.requestFailed();
             logDataBuilder.responseBody("<-- HTTP FAILED: " + e.getMessage());
-            // 数据库记录操作
+            // 数据库记录操作--->
+            logOkHttpDate(logDataBuilder);
             throw e;
         }
         long tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs);
         logDataBuilder.responseDurationMs(tookMs);
 
         ResponseLogData<Response> responseLogData = logDataInterceptor.processResponse(logDataBuilder, response);
-        // 数据库记录操作
+        // 数据库记录操作--->
+        logOkHttpDate(logDataBuilder);
+        return responseLogData.getResponse();
+    }
+
+    private void logOkHttpDate(LogDataBuilder logDataBuilder) {
         // 进行日志打印
         String logdata = logDataBuilder.toString();
         if (logdata.length() > 4000) {
@@ -60,7 +66,6 @@ public class OkLogInterceptor implements Interceptor {
         } else {
             Log.i("okhttp", logdata);
         }
-        return responseLogData.getResponse();
     }
 
 }
