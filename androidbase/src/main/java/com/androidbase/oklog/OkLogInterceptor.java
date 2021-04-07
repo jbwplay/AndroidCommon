@@ -35,6 +35,10 @@ public class OkLogInterceptor implements Interceptor {
         try {
             response = chain.proceed(requestLogData.getRequest());
         } catch (Exception e) {
+            logDataBuilder.responseCode(0)
+                    .responseMessage("")
+                    .responseContentLength(0)
+                    .responseUrl(logDataBuilder.getRequestUrl());
             logDataBuilder.requestFailed();
             logDataBuilder.responseBody("<-- HTTP FAILED: " + e.getMessage());
             // 数据库记录操作--->
