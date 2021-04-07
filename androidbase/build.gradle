@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 102
-        versionName "1.0.2"
+        versionCode 103
+        versionName "1.0.3"
 
         // used by Room, to test migrations
         javaCompileOptions {
